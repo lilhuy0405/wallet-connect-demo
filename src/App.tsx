@@ -38,14 +38,19 @@ function App() {
     provider.on("disconnect", (code: number, reason: string) => {
       console.log(code, reason);
     });
+    return web3Provider
   }
 
   const handleSignMessage = async () => {
+    let web3Provider = library;
     if (!library) {
-      alert("Please connect first");
+      web3Provider = await handleConnect();
+    }
+    if(!web3Provider) {
+      alert("No web3 provider found");
       return;
     }
-    const signer = library.getSigner();
+    const signer = web3Provider.getSigner();
     const message = "Hello World";
     const signature = await signer.signMessage(message);
     setSignal(signature);
